@@ -11,7 +11,6 @@ def index(request):
         form = CityForm(request.POST)
         if form.is_valid():
             city_name = form.cleaned_data['name']
-            # Check if city exists in OpenWeatherMap before saving
             r = requests.get(url.format(city_name)).json()
             if r.get('cod') == 200:
                 if not City.objects.filter(name__iexact=city_name).exists():

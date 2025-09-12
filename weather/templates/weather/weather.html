@@ -89,9 +89,9 @@
             gap: 8px;
         }
 
-        .search-btn:hover {
+        /* .search-btn:hover {
             transform: translateY(-3px);
-        }
+        } */
 
         .instruction {
             font-size: 1.3rem;
@@ -182,11 +182,6 @@
             backdrop-filter: blur(5px);
         }
 
-        .delete-btn:hover {
-            background:  #d9534f;
-            transform: translateY(-4px);
-        }
-
        #toast {
             visibility: hidden;
             min-width: 280px;
@@ -258,24 +253,35 @@
         <span id="toast-msg"></span>
     </div>
 
- <script>
-    function showToast(message) {
-    var toast = document.getElementById("toast");
-    var msg = document.getElementById("toast-msg");
-    msg.textContent = message;
-    toast.className = "show";
-    setTimeout(function(){
-        toast.className = toast.className.replace("show", "");
-        toast.style.visibility = "hidden";
-    }, 1500);
-}
-</script>
-{% if messages %}
 <script>
-    {% for message in messages %}
-        showToast("{{ message|escapejs }}");
-    {% endfor %}
+    function showToast(message, duration = 1500) {
+        return new Promise(resolve => {
+            var toast = document.getElementById("toast");
+            var msg = document.getElementById("toast-msg");
+            msg.textContent = message;
+            toast.classList.add("show");
+            
+            setTimeout(function() {
+                toast.classList.remove("show");
+                setTimeout(resolve, 500);
+            }, duration);
+        });
+    }
+
+    // Process messages sequentially
+    {% if messages %}
+    (async function() {
+        var messages = [
+            {% for message in messages %}
+                "{{ message|escapejs }}",
+            {% endfor %}
+        ];
+        
+        for (const message of messages) {
+            await showToast(message);
+        }
+    })();
+    {% endif %}
 </script>
-{% endif %}
 </body>
 </html>
