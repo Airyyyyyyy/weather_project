@@ -1,7 +1,11 @@
-from django.forms import ModelForm
-from .models import City
+from django import forms
 
-class CityForm(ModelForm):
-    class Meta:
-        model = City
-        fields = ['name']
+class CityForm(forms.Form):
+    name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter city name',
+            'autocomplete': 'off'
+        })
+    )

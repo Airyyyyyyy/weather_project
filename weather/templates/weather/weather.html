@@ -182,7 +182,7 @@
             backdrop-filter: blur(5px);
         }
 
-       #toast {
+        #toast {
             visibility: hidden;
             min-width: 280px;
             background: rgba(0, 0, 0, 0.7);
@@ -209,6 +209,65 @@
             visibility: visible;
             opacity: 1;
             transform: translateX(-50%) translateY(0);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            opacity: 0.7;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;      
+        }
+
+        .empty-state p {
+            font-size: 1.5rem;
+            font-weight: 700;
+            
+        }
+
+        @media (max-width: 631px) {
+            .weather-card {
+                width: 90%;
+            }
+
+            .search-input {
+                width: 60%;
+            }
+        }
+
+        @media (max-width: 454px) {
+            .search-input {
+                width: 50%;
+            }
+
+            .search-btn {
+                padding: 15px 20px;
+                font-size: 1rem;
+                
+            }
+
+            .app-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            /* body {
+                margin: 10px 5px;
+                padding: 5px 5px;
+            } */
+        }
+
+        @media (max-width: 512px) {
+            body {
+                padding: 10px 5px;
+            }
         }
     </style>
 </head>
@@ -243,6 +302,11 @@
                         {% csrf_token %}
                         <button type="submit" class="delete-btn">Delete</button>
                     </form>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-cloud fa-3x"></i>
+                    <p>No cities added yet. Search for a city to get started!</p>
                 </div>
                 {% endfor %}
             </div>
