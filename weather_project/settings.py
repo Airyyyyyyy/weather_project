@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-3^1v1(kkc(2v)e_1pqrw*)c2bfmkp$w)b3!70p2xp&k7^itaub
 DEBUG = True
 
 ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['weather-project-oqys.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
