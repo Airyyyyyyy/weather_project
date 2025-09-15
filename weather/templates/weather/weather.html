@@ -76,8 +76,8 @@
         }
 
         .search-btn {
-            font-size: 1.1rem;
-            padding: 15px 30px;
+            font-size: 0.9rem;
+            padding: 10px 25px;
             border: none;
             border-radius: 50px;
             background: linear-gradient(45deg, #4682B4, #5a9bd5);
@@ -283,9 +283,9 @@
             <div class="search-container">
                 <form method="POST" style="display: flex; gap: 10px; width: 100%; justify-content: center;">
                     {% csrf_token %}
-                    <input type="text" class="search-input" id="city-input" name="name" placeholder="Enter a city name...">
+                    <input type="text" class="search-input" id="city-input" name="name" placeholder=" Enter a city name...">  
                     <button class="search-btn" id="search-btn">
-                        <i class="fas fa-search"></i> Add City
+                        <i class="fas fa-plus"></i> Add City
                     </button>
                 </form>
             </div>
