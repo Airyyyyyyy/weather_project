@@ -437,3 +437,35 @@ h1 {
         padding: 10px 5px;
     }
 }
+
+
+/* Page loader shown while a city is being added or removed */
+.page-loader {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.page-loader[hidden] { display: none; }
+.loader-box {
+    background: #fff;
+    color: #333;
+    padding: 24px 32px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+.loader-box p { margin: 12px 0 0; font-weight: 600; }
+.loader-spinner {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    border: 4px solid #d9d9d9;
+    border-top-color: #4a90e2;
+    border-radius: 50%;
+    animation: loader-spin 0.8s linear infinite;
+}
+@keyframes loader-spin { to { transform: rotate(360deg); } }

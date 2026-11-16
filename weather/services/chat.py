@@ -2,19 +2,14 @@
 import logging
 
 from .recommendations import get_activity_suggestion, get_clothing_advice
-from .weather_api import get_current_weather
+from .weather_api import get_current_weather_many
 
 logger = logging.getLogger(__name__)
 
 
 def get_tracked_cities_weather(cities):
     """Get detailed current weather for all tracked cities."""
-    weather_data = []
-    for city in cities:
-        info = get_current_weather(city)
-        if info:
-            weather_data.append(info)
-    return weather_data
+    return [info for info in get_current_weather_many(cities) if info]
 
 
 def generate_enhanced_chat_response(user_message, tracked_cities_weather, cities):

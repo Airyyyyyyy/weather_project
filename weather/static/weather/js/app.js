@@ -13,6 +13,34 @@ function showToast(message, duration = 1500) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    const loader = document.getElementById('page-loader');
+    const loaderText = document.getElementById('loader-text');
+
+    function showLoader(text) {
+        if (!loader) return;
+        loaderText.textContent = text;
+        loader.hidden = false;
+    }
+
+    const addForm = document.getElementById('add-city-form');
+    if (addForm) {
+        addForm.addEventListener('submit', function() {
+            const input = document.getElementById('city-input');
+            if (!input.value.trim()) return;
+            showLoader('Fetching weather data...');
+            document.getElementById('search-btn').disabled = true;
+        });
+    }
+
+    document.querySelectorAll('form[action*="delete"]').forEach(function(f) {
+        f.addEventListener('submit', function() { showLoader('Removing city...'); });
+    });
+
+    // Restore the page if the user comes back via the browser's back button.
+    window.addEventListener('pageshow', function(e) {
+        if (e.persisted && loader) loader.hidden = true;
+    });
+
     const chatToggle = document.getElementById('chatToggle');
     const chatContainer = document.getElementById('chatContainer');
     const chatMessages = document.getElementById('chatMessages');

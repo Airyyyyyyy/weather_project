@@ -32,7 +32,7 @@
             {% endif %}
 
             <div class="search-container">
-                <form method="POST" style="display: flex; gap: 10px; width: 100%; justify-content: center;">
+                <form method="POST" id="add-city-form" style="display: flex; gap: 10px; width: 100%; justify-content: center;">
                     {% csrf_token %}
                     <input type="text" class="search-input" id="city-input" name="name" placeholder=" Enter a city name...">
                     <button class="search-btn" id="search-btn">
@@ -127,6 +127,13 @@
         [{% for message in messages %}"{{ message|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}]
     </script>
     {% endif %}
+
+    <div id="page-loader" class="page-loader" hidden aria-live="polite">
+        <div class="loader-box">
+            <div class="loader-spinner"></div>
+            <p id="loader-text">Fetching weather data...</p>
+        </div>
+    </div>
 
     <script src="{% static 'weather/js/app.js' %}"></script>
 </body>

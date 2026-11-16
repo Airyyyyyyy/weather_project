@@ -35,7 +35,7 @@ class IndexViewTests(TestCase):
         self.assertEqual(self.client.session['user_cities'], ['London'])
 
     @patch('weather.views.forecast_model.predict', return_value=None)
-    @patch('weather.views.get_current_weather', return_value=FAKE_WEATHER)
+    @patch('weather.views.get_current_weather_many', return_value=[FAKE_WEATHER])
     @patch('weather.views.city_exists', return_value=True)
     def test_tracked_city_weather_is_displayed(self, mock_exists, mock_weather, mock_forecast):
         self.client.post(reverse('index'), {'name': 'London'})
@@ -50,3 +50,29 @@ class DeleteCityViewTests(TestCase):
         self.client.post(reverse('index'), {'name': 'London'})
         self.client.post(reverse('delete_city', args=['London']))
         self.assertEqual(self.client.session['user_cities'], [])
+
+class WeatherApiCacheTests(TestCase):
+    def setUp(self):
+        from django.core.cache import cache
+        cache.clear()
+
+    @patch('weather.services.weather_api._fetch_current_weather', return_value=dict(FAKE_WEATHER))
+    def test_second_lookup_uses_cache(self, mock_fetch):
+        from weather.services.weather_api import get_current_weather
+        get_current_weather('London')
+        info = get_current_weather('london')
+        self.assertEqual(mock_fetch.call_count, 1)
+        self.assertEqual(info['city'], 'london')
+
+    @patch('weather.services.weather_api._fetch_current_weather', return_value=None)
+    def test_failed_lookup_is_not_cached(self, mock_fetch):
+        from weather.services.weather_api import get_current_weather
+        get_current_weather('Nowhere')
+        get_current_weather('Nowhere')
+        self.assertEqual(mock_fetch.call_count, 2)
+
+    @patch('weather.services.weather_api._fetch_current_weather', side_effect=lambda c: {**FAKE_WEATHER, 'city': c})
+    def test_many_preserves_order(self, mock_fetch):
+        from weather.services.weather_api import get_current_weather_many
+        result = get_current_weather_many(['A', 'B', 'C'])
+        self.assertEqual([r['city'] for r in result], ['A', 'B', 'C'])

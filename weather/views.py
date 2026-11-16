@@ -10,7 +10,7 @@ from .forms import CityForm
 from .ml.forecast_model import forecast_model
 from .services import chat
 from .services.recommendations import generate_rule_based_insight, generate_smart_alerts
-from .services.weather_api import city_exists, get_current_weather
+from .services.weather_api import city_exists, get_current_weather_many
 
 logger = logging.getLogger(__name__)
 
@@ -40,8 +40,7 @@ def index(request):
     form = CityForm()
     weather_data = []
 
-    for city_name in cities:
-        info = get_current_weather(city_name)
+    for city_name, info in zip(cities, get_current_weather_many(cities)):
         if not info:
             logger.warning("Could not fetch weather for %s", city_name)
             continue
