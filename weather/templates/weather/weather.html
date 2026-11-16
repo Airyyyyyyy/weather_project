@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'weather/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="app-title">
+                <i class="fas fa-cloud-sun fa-2x"></i>
+                <h1>Weather Dashboard</h1>
+            </div>
+            <p class="subtitle">Real-time weather with an ML-based next-day forecast</p>
+
+            {% if smart_alerts %}
+            <div class="smart-alerts">
+                {% for alert in smart_alerts %}
+                <div class="alert-card {{ alert.type }}">
+                    <i class="fas fa-exclamation-triangle alert-icon"></i>
+                    <div>
+                        <strong>{{ alert.city }}:</strong> {{ alert.alert }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="search-container">
+                <form method="POST" style="display: flex; gap: 10px; width: 100%; justify-content: center;">
+                    {% csrf_token %}
+                    <input type="text" class="search-input" id="city-input" name="name" placeholder=" Enter a city name...">
+                    <button class="search-btn" id="search-btn">
+                        <i class="fas fa-plus"></i> Add City
+                    </button>
+                </form>
+            </div>
+            <p class="instruction">Enter a city name above to see current weather conditions</p>
+
+            <div class="weather-cards-container">
+                {% for city_weather in weather_data %}
+                <div class="weather-card">
+                    <h2>{{ city_weather.city }}</h2>
+                    <img class="weather-icon" src="https://openweathermap.org/img/wn/{{ city_weather.icon }}@2x.png" alt="Weather Icon">
+                    <div class="temperature">{{ city_weather.temperature }} °C</div>
+                    <div class="description">{{ city_weather.description }}</div>
+
+                    <div style="display: flex; justify-content: space-around; margin: 15px 0; font-size: 0.9rem;">
+                        <div>
+                            <i class="fas fa-tint"></i> {{ city_weather.humidity }}%
+                        </div>
+                        <div>
+                            <i class="fas fa-wind"></i> {{ city_weather.wind_speed }} m/s
+                        </div>
+                    </div>
+
+                    {% if city_weather.forecast %}
+                    <div class="forecast-card">
+                        <div class="forecast-card-header">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Tomorrow's Forecast (ML)</span>
+                        </div>
+                        Predicted temperature: {{ city_weather.forecast.predicted_tomorrow_temp_c }} °C<br>
+                        Rain chance: {{ city_weather.forecast.rain_probability|floatformat:0 }}%
+                        {% if city_weather.forecast.rain_expected %}(rain expected){% endif %}
+                    </div>
+                    {% endif %}
+
+                    {% if city_weather.insight %}
+                    <div class="tips-card">
+                        <div class="tips-card-header">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Weather Tips</span>
+                        </div>
+                        {{ city_weather.insight }}
+                    </div>
+                    {% endif %}
+
+                    <form method="POST" action="{% url 'delete_city' city_weather.city %}" style="margin-top: 10px;">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-cloud fa-3x"></i>
+                    <p>No cities added yet. Search for a city to get started!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </header>
+    </div>
+
+    <div class="chat-widget">
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <i class="fas fa-comments"></i> Quick Help
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    Hello! Ask me about weather conditions, clothing recommendations, or activity suggestions for your tracked cities.
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Ask about weather...">
+                <button class="chat-send" id="chatSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">
+            <i class="fas fa-comment"></i>
+        </button>
+    </div>
+
+    <div id="toast">
+        <span id="toast-msg"></span>
+    </div>
+
+    {% if messages %}
+    <script id="django-messages" type="application/json">
+        [{% for message in messages %}"{{ message|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+    </script>
+    {% endif %}
+
+    <script src="{% static 'weather/js/app.js' %}"></script>
+</body>
+</html>

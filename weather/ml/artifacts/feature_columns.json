@@ -1,0 +1,16 @@
+[
+  "lat",
+  "lon",
+  "temp_c",
+  "humidity_pct",
+  "pressure_hpa",
+  "wind_speed_ms",
+  "is_rainy",
+  "is_snowy",
+  "is_cloudy",
+  "is_clear",
+  "month_sin",
+  "month_cos",
+  "doy_sin",
+  "doy_cos"
+]
