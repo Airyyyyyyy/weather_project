@@ -73,7 +73,9 @@ class Command(BaseCommand):
         self.stdout.write(f"Train rows: {len(X_train)}, Test rows: {len(X_test)}")
 
         self.stdout.write("Training temperature regressor...")
-        temp_regressor = RandomForestRegressor(n_estimators=300, random_state=42, n_jobs=-1)
+        temp_regressor = RandomForestRegressor(
+            n_estimators=100, min_samples_leaf=20, random_state=42, n_jobs=-1
+        )
         temp_regressor.fit(X_train, y_temp_train)
         temp_pred = temp_regressor.predict(X_test)
 
@@ -83,7 +85,8 @@ class Command(BaseCommand):
 
         self.stdout.write("Training rain classifier...")
         rain_classifier = RandomForestClassifier(
-            n_estimators=300, random_state=42, n_jobs=-1, class_weight="balanced"
+            n_estimators=100, min_samples_leaf=30, random_state=42, n_jobs=-1,
+            class_weight="balanced",
         )
         rain_classifier.fit(X_train, y_rain_train)
         rain_pred = rain_classifier.predict(X_test)
@@ -114,8 +117,8 @@ class Command(BaseCommand):
         }
 
         ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
-        joblib.dump(temp_regressor, ARTIFACTS_DIR / "temp_regressor.joblib")
-        joblib.dump(rain_classifier, ARTIFACTS_DIR / "rain_classifier.joblib")
+        joblib.dump(temp_regressor, ARTIFACTS_DIR / "temp_regressor.joblib", compress=3)
+        joblib.dump(rain_classifier, ARTIFACTS_DIR / "rain_classifier.joblib", compress=3)
         (ARTIFACTS_DIR / "feature_columns.json").write_text(json.dumps(FEATURE_COLUMNS, indent=2))
         (ARTIFACTS_DIR / "metrics.json").write_text(json.dumps(metrics, indent=2))
 

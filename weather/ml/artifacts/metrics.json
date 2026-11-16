@@ -1,18 +1,18 @@
 {
-  "trained_at": "2026-09-18T05:54:08.745663Z",
+  "trained_at": "2026-11-16T13:15:30.799277Z",
   "train_rows": 55480,
   "test_rows": 13832,
   "test_period": "2023-01-01 onward",
   "temperature_regression": {
     "mae_celsius": 1.28,
-    "rmse_celsius": 1.795,
+    "rmse_celsius": 1.807,
     "naive_persistence_baseline_mae_celsius": 1.35
   },
   "rain_classification": {
-    "accuracy": 0.779,
-    "precision": 0.7,
-    "recall": 0.558,
-    "roc_auc": 0.84,
+    "accuracy": 0.754,
+    "precision": 0.593,
+    "recall": 0.772,
+    "roc_auc": 0.847,
     "positive_rate_test_set": 0.324
   }
 }
